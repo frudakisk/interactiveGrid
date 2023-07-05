@@ -1,38 +1,105 @@
 class Cell{
-  constructor(row, col) {
+  /*This class will focus on the cells within the grid.
+  Each cell will contain its own information that is callable */
+  constructor(row, col, location, corners, center, sensor_distances, calculated_RSSI, actual_RSSI) {
     this.row = row;
     this.col = col;
+    this.location = location;
+    this.corners = corners;
+    this.center = center;
+    this.sensor_distances = sensor_distances;
+    this.calculated_RSSI = calculated_RSSI;
+    this.actual_RSSI = actual_RSSI;
   }
 
   handleClick() {
+    /*This method prints out the information of the cell in a 
+    pretty way.
+    We can print out any of the Cell attributes, but to keep it simple
+    for now, we just print the location*/
     console.log(`Cell clicked: (${this.row}, ${this.col})`)
     return `Cell clicked: (${this.row}, ${this.col})`
   }
 
 
-}
+};
 
 // Grid size
 const gridSize = 10;
 const gridLength = 170;
-const gridWidth = 20
+const gridWidth = 20;
 
 // Grid creation
 const grid = document.getElementById('grid');
 
-// Create the grid cells
-for (let i = 0; i < gridWidth; i++) {
-  for (let j = 0; j < gridLength; j++) {
-    const cell = new Cell(i, j);
-    const cellElement = document.createElement('div');
-    cellElement.className = 'cell';
-    cellElement.textContent = 'Cell';
-    cellElement.addEventListener('click', () => showPopup(cell));
-    grid.appendChild(cellElement);
+
+function fetchData() {
+  /*This function reads in a json form of the grid data that was
+  prepared by phillip susman. This function also processes the data
+  to be injected into each cell */
+  fetch('./grid_data.json')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(jsonData => {
+    // Process the JSON data
+    processData(jsonData);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+
+function processData(data){
+  /*This function needs to process the data of each array
+  and create the information for each cell.
+  Each cell is corresponding to a tuple of (row#, col#) and we have to 
+  flip the row# because if how html builds a grid and how python builds a
+  grid. In python, origin is at the bottom left (0,0)
+  In html, the origin is at the top left. */
+  //for loop for row
+  //for loop for column
+  total = 0;
+  let dataLength = Object.keys(data).length;
+  console.log(dataLength); //printing length
+  while(total < dataLength){
+    for(i=0; i < gridWidth; i++){
+      let rowNum = i + (19-(i*2)); //this is the translation
+      for(j=0; j < gridLength; j++){
+        //for 170 cells, i need to change the row to the same number
+        let info = data[total]
+
+        let infoLocation = info.location.slice(1,-1); //get rid of ()
+        infoLocation = infoLocation.split(","); //turn to array [row,col]
+        console.log(infoLocation);
+        infoLocation[0] = rowNum; //change row number
+        infoLocation = "(" + infoLocation.toString() + ")"; //turn back to string
+        data[total].location = infoLocation; //put back in json data
+        console.log(data[total]);
+        createGridCell(rowNum, j, data[total].location,
+          data[total].corners, data[total].center, data[total].sensor_distances,
+          data[total].calculated_RSSI, data[total].actual_RSSI)
+        total ++;
+      }
+    }
   }
 }
 
-// Show popup with "hello!" message
+function createGridCell(row, column, location, corners, center, sensor_distances, calculated_RSSI, actual_RSSI){
+  /*Creates an instance of Cell class and also
+  creates a cell element that will be apart of the grid*/
+  const cell = new Cell(row, column, location, corners, center, sensor_distances, calculated_RSSI, actual_RSSI);
+  const cellElement = document.createElement('div');
+  cellElement.className = 'cell';
+  cellElement.textContent = 'Cell';
+  cellElement.addEventListener('click', () => showPopup(cell));
+  grid.appendChild(cellElement);
+}
+
+// Show popup with "cell location" message
 function showPopup(cell) {
   const popup = document.getElementById('popup');
   const popupText = document.getElementById('popupText');
@@ -48,5 +115,7 @@ window.addEventListener('click', (event) => {
     popup.style.display = 'none';
   }
 });
+
+fetchData()
 
 
