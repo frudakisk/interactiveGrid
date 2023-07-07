@@ -95,14 +95,15 @@ function createGridCell(row, column, location, corners, center, sensor_distances
   const cellElement = document.createElement('div');
   cellElement.className = 'cell';
   cellElement.textContent = 'Cell';
-  cellElement.addEventListener('click', () => showPopup(cell));
+  cellElement.addEventListener('click', () => showPopup(cell, cellElement));
   grid.appendChild(cellElement);
 }
 
 // Show popup with "cell location" message
-function showPopup(cell) {
+function showPopup(cell, cellElement) {
   const popup = document.getElementById('popup');
   const popupText = document.getElementById('popupText');
+  cellElement.style.backgroundColor = 'purple';
   popupText.textContent = cell.handleClick();
   popup.style.display = 'block';
 }
