@@ -101,6 +101,13 @@ function createGridCell(row, column, location, corners, center, sensor_distances
 
 // Show popup with "cell location" message
 function showPopup(cell, cellElement) {
+  const cells = document.getElementsByClassName('cell');
+  // Loop through the selected elements
+  for (let i = 0; i < cells.length; i++) {
+    cells[i].style.backgroundColor = 'orange';
+  }
+
+
   const popup = document.getElementById('popup');
   const popupText = document.getElementById('popupText');
   cellElement.style.backgroundColor = 'purple';
