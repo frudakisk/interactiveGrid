@@ -101,13 +101,7 @@ function createGridCell(row, column, location, corners, center, sensor_distances
 
 // Show popup with "cell location" message
 function showPopup(cell, cellElement) {
-  const cells = document.getElementsByClassName('cell');
-  // Loop through the selected elements
-  for (let i = 0; i < cells.length; i++) {
-    cells[i].style.backgroundColor = 'orange';
-  }
-
-
+  resetCells();
   const popup = document.getElementById('popup');
   const popupText = document.getElementById('popupText');
   cellElement.style.backgroundColor = 'purple';
@@ -115,11 +109,21 @@ function showPopup(cell, cellElement) {
   popup.style.display = 'block';
 }
 
+// Resets cells to default state (background).
+function resetCells() {
+  const cells = document.getElementsByClassName('cell');
+  // Loop through the selected elements
+  for (let i = 0; i < cells.length; i++) {
+    cells[i].style.backgroundColor = 'orange';
+  }
+}
+
 
 // Hide popup when clicked outside of it
 window.addEventListener('click', (event) => {
   const popup = document.getElementById('popup');
   if (event.target.tagName == 'HTML'){
+    resetCells();
     popup.style.display = 'none';
   }
 });
