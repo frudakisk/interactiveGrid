@@ -10,6 +10,7 @@ class Cell{
     this.sensor_distances = sensor_distances;
     this.calculated_RSSI = calculated_RSSI;
     this.actual_RSSI = actual_RSSI;
+    this.score = Math.floor(Math.random() * (1001 - 300) + 300);
   }
 
   handleClick() {
@@ -17,11 +18,12 @@ class Cell{
     pretty way.
     We can print out any of the Cell attributes, but to keep it simple
     for now, we just print the location*/
-    console.log(`Cell clicked: (${this.row}, ${this.col})`)
-    return `Cell clicked: (${this.row}, ${this.col})`
+    console.log(`Cell clicked: (${this.row}, ${this.col})`);
+    console.log(`Calculated RSSI ${this.calculated_RSSI}`);
+    let score = normalize(this.score);
+    console.log(`Cell Score: ${score}`);
+    return `Cell clicked: (${this.row}, ${this.col})`;
   }
-
-
 };
 
 // Grid size
@@ -96,6 +98,7 @@ function createGridCell(row, column, location, corners, center, sensor_distances
   cellElement.className = 'cell';
   cellElement.textContent = 'Cell';
   cellElement.addEventListener('click', () => showPopup(cell, cellElement));
+  cellElement.cellinfo = cell;
   grid.appendChild(cellElement);
 }
 
@@ -114,8 +117,16 @@ function resetCells() {
   const cells = document.getElementsByClassName('cell');
   // Loop through the selected elements
   for (let i = 0; i < cells.length; i++) {
-    cells[i].style.backgroundColor = 'orange';
+    console.log(cells[i]);
+    cells[i].style.backgroundColor = `rgba(255,140,0,1)`;
+    let score = normalize(cells[i].cellinfo.score);
+    cells[i].style.backgroundColor = `rgba(255,140,0, ${score})`;
+    // cells[i].style.filter = `brightness(${score}%)`;
   }
+}
+
+function normalize(val, max = 1000, min = 0) {
+  return (val - min) / (max - min);
 }
 
 
