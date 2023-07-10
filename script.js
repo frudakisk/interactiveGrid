@@ -25,7 +25,8 @@ class Cell{
     let HTML = `Calculated RSSI: ${this.calculated_RSSI} <br />
                        Actual RSSI: ${this.actual_RSSI} <br />
                        Sensor Distances: ${this.sensor_distances}<br />
-                       Cell clicked: (${this.row}, ${this.col})`;
+                       Cell clicked: (${this.row}, ${this.col}) <br />
+                       Score: ${this.score}`;
     return HTML;
   }
 };
