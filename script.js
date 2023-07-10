@@ -22,7 +22,11 @@ class Cell{
     console.log(`Calculated RSSI ${this.calculated_RSSI}`);
     let score = normalize(this.score);
     console.log(`Cell Score: ${score}`);
-    return `Cell clicked: (${this.row}, ${this.col}) \n\ Score: ${this.score}`;
+    let HTML = `Calculated RSSI: ${this.calculated_RSSI} <br />
+                       Actual RSSI: ${this.actual_RSSI} <br />
+                       Sensor Distances: ${this.sensor_distances}<br />
+                       Cell clicked: (${this.row}, ${this.col})`;
+    return HTML;
   }
 };
 
@@ -107,7 +111,7 @@ function showPopup(cell, cellElement) {
   const popup = document.getElementById('popup');
   const popupText = document.getElementById('popupText');
   cellElement.style.backgroundColor = 'purple';
-  popupText.textContent = cell.handleClick();
+  popupText.innerHTML = cell.handleClick();
   popup.style.display = 'block';
 }
 
