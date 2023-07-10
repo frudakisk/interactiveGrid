@@ -1,7 +1,7 @@
 class Cell{
   /*This class will focus on the cells within the grid.
   Each cell will contain its own information that is callable */
-  constructor(row, col, location, corners, center, sensor_distances, calculated_RSSI, actual_RSSI) {
+  constructor(row, col, location, corners, center, sensor_distances, calculated_RSSI, actual_RSSI, score) {
     this.row = row;
     this.col = col;
     this.location = location;
@@ -10,7 +10,8 @@ class Cell{
     this.sensor_distances = sensor_distances;
     this.calculated_RSSI = calculated_RSSI;
     this.actual_RSSI = actual_RSSI;
-    this.score = Math.floor(Math.random() * (1001 - 300) + 300);
+    //this.score = Math.floor(Math.random() * (1001 - 300) + 300);
+    this.score = score
   }
 
   handleClick() {
@@ -87,17 +88,17 @@ function processData(data, gridLength, gridWidth){
         console.log(data[total]);
         createGridCell(rowNum, j, data[total].location,
           data[total].corners, data[total].center, data[total].sensor_distances,
-          data[total].calculated_RSSI, data[total].actual_RSSI)
+          data[total].calculated_RSSI, data[total].actual_RSSI, data[total].score)
         total ++;
       }
     }
   }
 }
 
-function createGridCell(row, column, location, corners, center, sensor_distances, calculated_RSSI, actual_RSSI){
+function createGridCell(row, column, location, corners, center, sensor_distances, calculated_RSSI, actual_RSSI, score){
   /*Creates an instance of Cell class and also
   creates a cell element that will be apart of the grid*/
-  const cell = new Cell(row, column, location, corners, center, sensor_distances, calculated_RSSI, actual_RSSI);
+  const cell = new Cell(row, column, location, corners, center, sensor_distances, calculated_RSSI, actual_RSSI, score);
   const cellElement = document.createElement('div');
   cellElement.className = 'cell';
   cellElement.textContent = 'Cell';
