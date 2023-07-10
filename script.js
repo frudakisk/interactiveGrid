@@ -22,14 +22,10 @@ class Cell{
     console.log(`Calculated RSSI ${this.calculated_RSSI}`);
     let score = normalize(this.score);
     console.log(`Cell Score: ${score}`);
-    return `Cell clicked: (${this.row}, ${this.col})`;
+    return `Cell clicked: (${this.row}, ${this.col}) \n\ Score: ${this.score}`;
   }
 };
 
-// Grid size
-const gridSize = 10;
-const gridLength = 170;
-const gridWidth = 20;
 
 // Grid creation
 const grid = document.getElementById('grid');
@@ -39,7 +35,7 @@ function fetchData() {
   /*This function reads in a json form of the grid data that was
   prepared by phillip susman. This function also processes the data
   to be injected into each cell */
-  fetch('./grid_data.json')
+  fetch('./sampleGrid.json')
   .then(response => {
     if (!response.ok) {
       throw new Error('Network response was not ok');
@@ -48,14 +44,17 @@ function fetchData() {
   })
   .then(jsonData => {
     // Process the JSON data
-    processData(jsonData);
+    //Will have to MANUALLY change columns and rows templates to whatever dimensions we decide for the grid
+    let gridLength = 25;
+    let gridWidth = 5;
+    processData(jsonData, gridLength, gridWidth);
   })
   .catch(error => {
     console.error('Error:', error);
   });
 }
 
-function processData(data){
+function processData(data, gridLength, gridWidth){
   /*This function needs to process the data of each array
   and create the information for each cell.
   Each cell is corresponding to a tuple of (row#, col#) and we have to 
@@ -69,7 +68,7 @@ function processData(data){
   console.log(dataLength); //printing length
   while(total < dataLength){
     for(i=0; i < gridWidth; i++){
-      let rowNum = i + (19-(i*2)); //this is the translation
+      let rowNum = i + ((gridWidth-1)-(i*2)); //this is the translation //4 should be adjusted with gridWidth
       for(j=0; j < gridLength; j++){
         //for 170 cells, i need to change the row to the same number
         let info = data[total]

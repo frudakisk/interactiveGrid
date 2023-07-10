@@ -1,7 +1,9 @@
+/*Will have to MANUALLY change columns and rows templates to whatever 
+dimensions we decide for the grid*/
 .grid {
   display: grid;
-  grid-template-columns: repeat(170, 1fr);
-  grid-template-rows: repeat(20, 1fr);
+  grid-template-columns: repeat(25, 1fr);
+  grid-template-rows: repeat(5, 1fr);
   gap: 1px;
 }
 
