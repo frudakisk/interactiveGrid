@@ -19,10 +19,7 @@ class Cell{
     pretty way.
     We can print out any of the Cell attributes, but to keep it simple
     for now, we just print the location*/
-    console.log(`Cell clicked: (${this.row}, ${this.col})`);
-    console.log(`Calculated RSSI ${this.calculated_RSSI}`);
     let score = normalize(this.score);
-    console.log(`Cell Score: ${score}`);
     let HTML = `Calculated RSSI: ${this.calculated_RSSI} <br />
                        Actual RSSI: ${this.actual_RSSI} <br />
                        Sensor Distances: ${this.sensor_distances}<br />
@@ -54,6 +51,7 @@ function fetchData() {
     let gridLength = 25;
     let gridWidth = 5;
     processData(jsonData, gridLength, gridWidth);
+    resetCells();
   })
   .catch(error => {
     console.error('Error:', error);
@@ -81,11 +79,11 @@ function processData(data, gridLength, gridWidth){
 
         let infoLocation = info.location.slice(1,-1); //get rid of ()
         infoLocation = infoLocation.split(","); //turn to array [row,col]
-        console.log(infoLocation);
+         // console.log(infoLocation);
         infoLocation[0] = rowNum; //change row number
         infoLocation = "(" + infoLocation.toString() + ")"; //turn back to string
         data[total].location = infoLocation; //put back in json data
-        console.log(data[total]);
+        // console.log(data[total]);
         createGridCell(rowNum, j, data[total].location,
           data[total].corners, data[total].center, data[total].sensor_distances,
           data[total].calculated_RSSI, data[total].actual_RSSI, data[total].score)
@@ -119,19 +117,41 @@ function showPopup(cell, cellElement) {
 
 // Resets cells to default state (background).
 function resetCells() {
+  let min_score = 100;
+  let max_score = 0;
   const cells = document.getElementsByClassName('cell');
+  let sensor_id = document.getElementById("sensor-select").value;
+  console.log(sensor_id);
+
   // Loop through the selected elements
   for (let i = 0; i < cells.length; i++) {
-    console.log(cells[i]);
     cells[i].style.backgroundColor = `rgba(255,140,0,1)`;
-    let score = normalize(cells[i].cellinfo.score);
+    let score_JSON = cells[i].cellinfo.score;
+    score_JSON = score_JSON.replace(/'/g, '"');
+    let score = JSON.parse(score_JSON);
+    score = score[sensor_id];
+    cells[i].cellinfo.sensor_score = score;
+    if (score >= max_score) {
+      max_score = score;
+    }
+    if (score <= min_score) {
+      min_score = score;
+    }
+  }
+
+  console.log(max_score);
+  console.log(min_score);
+
+  for (let i = 0; i < cells.length; i++) {
+    let score = normalize(cells[i].cellinfo.sensor_score, min_score, max_score);
+    /*console.log(cells[i].cellinfo.sensor_score);
+    console.log(score);*/
     cells[i].style.backgroundColor = `rgba(255,140,0, ${score})`;
-    // cells[i].style.filter = `brightness(${score}%)`;
   }
 }
 
-function normalize(val, max = 1000, min = 0) {
-  return (val - min) / (max - min);
+function normalize(val, min_score, max_score) {
+  return (val - min_score) / (max_score - min_score);
 }
 
 
@@ -144,6 +164,11 @@ window.addEventListener('click', (event) => {
   }
 });
 
-fetchData()
+fetchData();
+
+document.getElementById('sensor-select').addEventListener('change', function(e) {
+  resetCells();
+  return false;
+});
 
 
