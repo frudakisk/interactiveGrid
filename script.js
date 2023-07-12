@@ -123,7 +123,7 @@ function resetCells() {
     let score = JSON.parse(score_JSON);
     score = score[sensor_id];
     cells[i].cellinfo.sensor_score = score;
-    if (score = -9999) {
+    if (score == -9999) {
       continue;
     }
     if (score >= max_score) {
