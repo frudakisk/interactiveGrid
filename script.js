@@ -1,7 +1,7 @@
 class Cell{
   /*This class will focus on the cells within the grid.
   Each cell will contain its own information that is callable */
-  constructor(row, col, location, corners, center, sensor_distances, calculated_RSSI, actual_RSSI, score, hasSensor) {
+  constructor(row, col, location, corners, center, sensor_distances, calculated_RSSI, avg_RSSI, score, hasSensor) {
     this.row = row;
     this.col = col;
     this.location = location;
@@ -9,8 +9,7 @@ class Cell{
     this.center = center;
     this.sensor_distances = sensor_distances;
     this.calculated_RSSI = calculated_RSSI;
-    this.actual_RSSI = actual_RSSI;
-    //this.score = Math.floor(Math.random() * (1001 - 300) + 300);
+    this.avg_RSSI = avg_RSSI;
     this.score = score;
     this.hasSensor = hasSensor;
   }
@@ -26,7 +25,7 @@ class Cell{
     let score = normalize(this.score);
     console.log(`Cell Score: ${this.score}`);
     let HTML = `Calculated RSSI: ${this.calculated_RSSI} <br />
-                       Actual RSSI: ${this.actual_RSSI} <br />
+                       Average RSSI: ${this.avg_RSSI} <br />
                        Sensor Distances: ${this.sensor_distances}<br />
                        Cell clicked: (${this.row}, ${this.col}) <br />
                        Score: ${this.score} <br />
@@ -77,7 +76,7 @@ function processData(data){
     let center = data[i].center;
     let sensorDistances = data[i].sensor_distances;
     let calculatedRssi = data[i].calculated_RSSI;
-    let actualRssi = data[i].actual_RSSI;
+    let actualRssi = data[i].avg_RSSI;
     let score = data[i].score;
     let hasSensor = data[i].hasSensor;
     createGridCell(rowNum, colNum, location, corners, center, sensorDistances,
@@ -86,10 +85,10 @@ function processData(data){
 }
 
 
-function createGridCell(row, column, location, corners, center, sensor_distances, calculated_RSSI, actual_RSSI, score, hasSensor){
+function createGridCell(row, column, location, corners, center, sensor_distances, calculated_RSSI, avg_RSSI, score, hasSensor){
   /*Creates an instance of Cell class and also
   creates a cell element that will be apart of the grid*/
-  const cell = new Cell(row, column, location, corners, center, sensor_distances, calculated_RSSI, actual_RSSI, score, hasSensor);
+  const cell = new Cell(row, column, location, corners, center, sensor_distances, calculated_RSSI, avg_RSSI, score, hasSensor);
   const cellElement = document.createElement('div');
   cellElement.className = 'cell';
   cellElement.textContent = 'Cell';
